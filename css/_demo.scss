@@ -1,0 +1,82 @@
+#demo {
+  table, th, td {
+    border-collapse: collapse;
+    border: 1px solid #222;
+  }
+  thead {
+    background: rgba(255, 165, 0, 0.7);
+    font-weight: normal;
+  }
+  th {
+    font-weight: bold !important;
+    text-align: center;
+  }
+  tbody th {
+    background: rgba(255, 165, 0, 0.2);
+  }
+}
+
+#demo {
+  .marker-under {
+    background: linear-gradient(transparent 60%, #ffff66 60%);
+  }
+  .has-text-align-right {
+    text-align: right;
+  }
+  .has-text-align-center {
+    text-align: center;
+  }
+  a {
+    color: #3399CC;
+  }
+  h2 {
+    font-size: 28px;
+    line-height: 1.4em;
+    letter-spacing: 0.05em;
+    padding: 0;
+    padding-bottom: 15px;
+    box-sizing: border-box;
+    margin: 30px 0 15px;
+    border: none;
+    position: relative;
+    &::after{
+      content: "";
+      width: 100%;
+      height: 7px;
+      background: #f9c801;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
+  }
+  h3 {
+    font-size: 24px;
+    line-height: 1.4em;
+    font-weight: 500;
+    margin: 0;
+    margin-top: 50px;
+    padding: 0;
+    padding-left: 20px;
+    border: none;
+    border-left: 7px solid #f9c801;
+  }
+  p {
+    margin: 10px 0;
+    border: 1px dotted royalblue;
+  }
+}
+
+// セキュリティ上の問題などで画像読み込み失敗時の代替表示
+div.demoImgOnError {
+  height: 450px;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #444;
+  position: relative;
+  &::before {
+    padding: 5px;
+    white-space: pre-wrap; // 改行を反映し、はみ出したら折り返す
+    position: absolute;
+    content: "記事ではここに画像が表示されます。\a\a- 画像URL -\a\"" attr(data-src) "\"\a\a- 代替タグ -\a\"" attr(data-alt) "\"";
+  }
+}

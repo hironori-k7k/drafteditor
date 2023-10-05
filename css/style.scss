@@ -1,0 +1,148 @@
+@use "reset";
+@use "demo";
+
+*::after, *::before {
+  font-family: "FontAwesome";
+}
+
+#nav_changetabs {
+  position: fixed;
+  background: #eee;
+  z-index: 999;
+  top: 0;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  height: 41px;
+  border-bottom: 1px solid #888;
+}
+#nav_changetabs button {
+  font-weight: bold;
+  font-size: 16px;
+  color: #333;
+  height: 38px;
+  width: auto;
+  min-width: 120px;
+  margin: 0;
+  border-radius: 0;
+  border: 1px solid #888;
+  border-bottom: none;
+  &.btn_show {
+    color: #111;
+    background-color: #fff;
+    opacity: 1;
+    border-color: #333;
+  }
+  &:not(.btn_show) {
+    background-color: #ccc;
+  }
+}
+
+section {
+  margin-top: 50px;
+}
+
+.flex {
+  display: flex;
+  &.textareas {
+    width: 99%;
+    div {
+      flex: 1; // 均等幅にする
+      margin: 0 4px;
+    }
+  }
+}
+
+body {
+  background: #e5e5e5;
+  margin: 0;
+}
+
+nav {
+  margin: 0;
+  padding: 2px 2px 0;
+}
+
+hr {
+  margin: 0 0 5px;
+}
+
+textarea {
+  margin: 2px 5px;
+  min-height: 500px;
+  width: 100%;
+  min-height: 80vh;
+}
+
+span.area {
+  margin-right: 15px;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+span#scopeRadios.invalid {
+  opacity: 0.35;
+}
+
+#demo {
+  padding: 10px;
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+label, input {
+  cursor: pointer;
+}
+
+div label {
+  display: inline-block;
+}
+
+label + label {
+  margin-left: 15px;
+}
+
+textarea, input {
+  background: #111;
+  color: #fff;
+  tab-size: 2;
+}
+
+.lime {
+  color: lime;
+}
+
+button {
+  display: inline-block;
+  cursor: pointer;
+  height: 26px;
+  margin: 4px 16px;
+  width: 6em;
+}
+
+#btns {
+  text-align: center;
+  font-weight: bold;
+}
+
+button.copied {
+  background-color: palegreen;
+}
+
+#output.copied {
+  border-color: lime;
+}
+
+#output.outputting {
+  animation: opc .6s;
+}
+@keyframes opc {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

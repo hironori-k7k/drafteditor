@@ -1,0 +1,284 @@
+@charset "UTF-8";
+/*
+  1. より直感的なボックスサイズのモデルを使用
+*/
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/*
+  2. デフォルトのマージンを削除
+*/
+* {
+  margin: 0;
+}
+
+/*
+  3. 高さは%ベースを使用
+*/
+/*
+  タイポグラフィの微調整
+  4. アクセシブルなline-heightを追加
+  5. テキストのレンダリングを改善
+*/
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/*
+  6. メディア要素のデフォルトを改善
+*/
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+
+/*
+  7. フォームのfontに関するデフォルトを削除
+*/
+button {
+  font: inherit;
+}
+
+/*
+  8. テキストのオーバーフローを回避
+*/
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+
+/*
+  9. ルートのスタックコンテキストを作成
+*/
+#root, #__next {
+  isolation: isolate;
+}
+
+#demo table, #demo th, #demo td {
+  border-collapse: collapse;
+  border: 1px solid #222;
+}
+#demo thead {
+  background: rgba(255, 165, 0, 0.7);
+  font-weight: normal;
+}
+#demo th {
+  font-weight: bold !important;
+  text-align: center;
+}
+#demo tbody th {
+  background: rgba(255, 165, 0, 0.2);
+}
+
+#demo .marker-under {
+  background: linear-gradient(transparent 60%, #ffff66 60%);
+}
+#demo .has-text-align-right {
+  text-align: right;
+}
+#demo .has-text-align-center {
+  text-align: center;
+}
+#demo a {
+  color: #3399CC;
+}
+#demo h2 {
+  font-size: 28px;
+  line-height: 1.4em;
+  letter-spacing: 0.05em;
+  padding: 0;
+  padding-bottom: 15px;
+  box-sizing: border-box;
+  margin: 30px 0 15px;
+  border: none;
+  position: relative;
+}
+#demo h2::after {
+  content: "";
+  width: 100%;
+  height: 7px;
+  background: #f9c801;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+#demo h3 {
+  font-size: 24px;
+  line-height: 1.4em;
+  font-weight: 500;
+  margin: 0;
+  margin-top: 50px;
+  padding: 0;
+  padding-left: 20px;
+  border: none;
+  border-left: 7px solid #f9c801;
+}
+#demo p {
+  margin: 10px 0;
+  border: 1px dotted royalblue;
+}
+
+div.demoImgOnError {
+  height: 450px;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #444;
+  position: relative;
+}
+div.demoImgOnError::before {
+  padding: 5px;
+  white-space: pre-wrap;
+  position: absolute;
+  content: '記事ではここに画像が表示されます。\a\a- 画像URL -\a"' attr(data-src) '"\a\a- 代替タグ -\a"' attr(data-alt) '"';
+}
+
+*::after, *::before {
+  font-family: "FontAwesome";
+}
+
+#nav_changetabs {
+  position: fixed;
+  background: #eee;
+  z-index: 999;
+  top: 0;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  height: 41px;
+  border-bottom: 1px solid #888;
+}
+
+#nav_changetabs button {
+  font-weight: bold;
+  font-size: 16px;
+  color: #333;
+  height: 38px;
+  width: auto;
+  min-width: 120px;
+  margin: 0;
+  border-radius: 0;
+  border: 1px solid #888;
+  border-bottom: none;
+}
+#nav_changetabs button.btn_show {
+  color: #111;
+  background-color: #fff;
+  opacity: 1;
+  border-color: #333;
+}
+#nav_changetabs button:not(.btn_show) {
+  background-color: #ccc;
+}
+
+section {
+  margin-top: 50px;
+}
+
+.flex {
+  display: flex;
+}
+.flex.textareas {
+  width: 99%;
+}
+.flex.textareas div {
+  flex: 1;
+  margin: 0 4px;
+}
+
+body {
+  background: #e5e5e5;
+  margin: 0;
+}
+
+nav {
+  margin: 0;
+  padding: 2px 2px 0;
+}
+
+hr {
+  margin: 0 0 5px;
+}
+
+textarea {
+  margin: 2px 5px;
+  min-height: 500px;
+  width: 100%;
+  min-height: 80vh;
+}
+
+span.area {
+  margin-right: 15px;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+span#scopeRadios.invalid {
+  opacity: 0.35;
+}
+
+#demo {
+  padding: 10px;
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+label, input {
+  cursor: pointer;
+}
+
+div label {
+  display: inline-block;
+}
+
+label + label {
+  margin-left: 15px;
+}
+
+textarea, input {
+  background: #111;
+  color: #fff;
+  -moz-tab-size: 2;
+    -o-tab-size: 2;
+       tab-size: 2;
+}
+
+.lime {
+  color: lime;
+}
+
+button {
+  display: inline-block;
+  cursor: pointer;
+  height: 26px;
+  margin: 4px 16px;
+  width: 6em;
+}
+
+#btns {
+  text-align: center;
+  font-weight: bold;
+}
+
+button.copied {
+  background-color: palegreen;
+}
+
+#output.copied {
+  border-color: lime;
+}
+
+#output.outputting {
+  animation: opc 0.6s;
+}
+
+@keyframes opc {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}/*# sourceMappingURL=style.css.map */
