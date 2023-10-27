@@ -44,7 +44,7 @@ button {
 /*
   8. テキストのオーバーフローを回避
 */
-p, h1, h2, h3, h4, h5, h6 {
+p, h1, h2, h3, h4, h5, h6, ul, ol {
   overflow-wrap: break-word;
 }
 
@@ -55,24 +55,141 @@ p, h1, h2, h3, h4, h5, h6 {
   isolation: isolate;
 }
 
-#demo table, #demo th, #demo td {
+#section_demo_inner {
+  width: 100%;
+  max-width: 1500px;
+  display: flex;
+  flex-wrap: wrap-reverse;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.marker-under {
+  background: linear-gradient(transparent 60%, #ffff66 60%);
+}
+
+div#demo_info {
+  flex: 0 1 380px;
+  padding-left: 8px;
+}
+div#demo_info #demo_info_inner {
+  width: 380px;
+  height: 100%;
+  position: fixed;
+  top: 50px;
+}
+div#demo_info li {
+  margin: 10px 0;
+}
+div#demo_info li:first-of-type {
+  margin-top: 0;
+}
+div#demo_info span.shortcut {
+  border: 2px solid #555;
+  border-radius: 5px;
+  background: #ddd;
+  padding: 1px 2px;
+  margin: 3px 2px;
+  margin-left: 10px;
+}
+
+#demo_toc {
+  border: 1px dashed #777;
+  padding: 5px;
+}
+#demo_toc ol {
+  font-size: 13.6px;
+  margin: 0;
+  padding: 0;
+}
+#demo_toc li {
+  list-style: none;
+  white-space: pre-wrap;
+  line-height: 1.08em;
+  cursor: pointer;
+}
+#demo_toc li.toc_h1 {
+  color: crimson;
+}
+#demo_toc li.toc_h1::after {
+  content: "：誤って本文に見出しh1が挿入されています！";
+}
+#demo_toc li.toc_h2, #demo_toc li.toc_h1 {
+  font-weight: bold;
+}
+#demo_toc li.toc_h3 {
+  padding-left: 10px;
+}
+#demo_toc li.toc_h4 {
+  padding-left: 20px;
+}
+#demo_toc li.toc_h5 {
+  padding-left: 30px;
+}
+#demo_toc li.toc_h6 {
+  padding-left: 40px;
+}
+#demo_toc li.toc_h4, #demo_toc li.toc_h5, #demo_toc li.toc_h6 {
+  font-size: 13.3px;
+}
+#demo_toc li:hover {
+  opacity: 0.65;
+}
+
+/* 820 + 380 = 1200 */
+@media (max-width: 1200px) {
+  div#demo_info #demo_info_inner {
+    position: relative;
+    top: initial;
+  }
+}
+div#demo {
+  counter-reset: tableNumber 0;
+}
+div#demo table {
+  margin: 40px auto 15px;
+  min-width: 90%;
+  cursor: nwse-resize;
+  position: relative;
+  counter-increment: tableNumber 1;
+}
+div#demo table::before {
+  display: block;
+  position: absolute;
+  top: -1.6em;
+  content: counter(tableNumber) " 個目の表";
+}
+div#demo table, div#demo th, div#demo td {
   border-collapse: collapse;
   border: 1px solid #222;
 }
-#demo thead {
-  background: rgba(255, 165, 0, 0.7);
+div#demo thead {
+  background: rgba(255, 165, 0, 0.6);
   font-weight: normal;
+  border-bottom: 3px solid;
 }
-#demo th {
+div#demo th {
   font-weight: bold !important;
   text-align: center;
 }
-#demo tbody th {
+div#demo tbody th {
   background: rgba(255, 165, 0, 0.2);
 }
 
-#demo .marker-under {
-  background: linear-gradient(transparent 60%, #ffff66 60%);
+#section_demo strong, #section_demo span.pseudo_strong {
+  border: 1px dashed red;
+}
+#section_demo p, #section_demo span.pseudo_p {
+  border: 1px dotted royalblue;
+}
+
+#demo {
+  padding: 10px;
+  max-width: 820px;
+}
+#demo strong {
+  cursor: pointer;
 }
 #demo .has-text-align-right {
   text-align: right;
@@ -81,7 +198,10 @@ p, h1, h2, h3, h4, h5, h6 {
   text-align: center;
 }
 #demo a {
-  color: #3399CC;
+  color: #287AA3;
+}
+#demo a[target=_blank][rel="noreferrer noopener"]::after {
+  content: "\f08e";
 }
 #demo h2 {
   font-size: 28px;
@@ -115,8 +235,31 @@ p, h1, h2, h3, h4, h5, h6 {
   border-left: 7px solid #f9c801;
 }
 #demo p {
-  margin: 10px 0;
-  border: 1px dotted royalblue;
+  cursor: ew-resize;
+  margin: 12px 0;
+  padding: 2px 1px;
+}
+#demo p.has-text-align-right {
+  border: 1px dashed royalblue;
+  position: relative;
+}
+#demo p.has-text-align-right::before {
+  position: absolute;
+  left: -10px;
+  top: -10px;
+  display: inline-block;
+  background-color: rgba(150, 255, 255, 0.45);
+  font-size: 12px;
+  content: "▶右寄せ";
+}
+
+#demo .wp-block-image::before {
+  display: block;
+  content: attr(title);
+}
+#demo .wp-block-image.warning::before {
+  color: crimson;
+  font-weight: bold;
 }
 
 div.demoImgOnError {
@@ -133,6 +276,13 @@ div.demoImgOnError::before {
   content: '記事ではここに画像が表示されます。\a\a- 画像URL -\a"' attr(data-src) '"\a\a- 代替タグ -\a"' attr(data-alt) '"';
 }
 
+/* 原稿編集とデモ以外のsectionの設定 */
+section:not(#section_edit):not(#section_demo) {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1000px;
+}
+
 *::after, *::before {
   font-family: "FontAwesome";
 }
@@ -140,26 +290,27 @@ div.demoImgOnError::before {
 #nav_changetabs {
   position: fixed;
   background: #eee;
-  z-index: 999;
+  z-index: 998;
   top: 0;
   left: 0;
   width: 100%;
   margin: 0;
+  padding: 2px 2px 0;
   height: 41px;
   border-bottom: 1px solid #888;
 }
 
 #nav_changetabs button {
-  font-weight: bold;
-  font-size: 16px;
-  color: #333;
+  display: inline-block;
   height: 38px;
-  width: auto;
-  min-width: 120px;
+  min-width: 6em;
   margin: 0;
   border-radius: 0;
   border: 1px solid #888;
   border-bottom: none;
+  font-size: 15.4px;
+  font-weight: bold;
+  color: #333;
 }
 #nav_changetabs button.btn_show {
   color: #111;
@@ -169,6 +320,50 @@ div.demoImgOnError::before {
 }
 #nav_changetabs button:not(.btn_show) {
   background-color: #ccc;
+}
+
+#nav_settings {
+  position: fixed;
+  z-index: 999;
+  top: 5px;
+  right: 12px;
+}
+
+#nav_settings_icon {
+  font-size: 28px;
+  cursor: pointer;
+}
+#nav_settings_icon:hover {
+  opacity: 0.85;
+}
+
+#nav_settings_overlay {
+  display: none;
+}
+#nav_settings_overlay label {
+  display: block;
+  padding-left: 15px;
+}
+#nav_settings_overlay label + p, #nav_settings_overlay button {
+  margin-top: 10px;
+}
+
+#nav_settings_icon.open_settings + #nav_settings_overlay {
+  position: absolute;
+  top: 10px;
+  right: 30px;
+  display: block;
+  width: 700px;
+  max-width: calc(100vw - 40px);
+  height: 500px;
+  max-height: calc(100vh - 20px);
+  padding: 10px;
+  background: #f7f7f7;
+  border: 2px solid #555;
+  border-radius: 10px;
+}
+#nav_settings_icon.open_settings + #nav_settings_overlay p {
+  text-decoration: underline;
 }
 
 section {
@@ -189,11 +384,7 @@ section {
 body {
   background: #e5e5e5;
   margin: 0;
-}
-
-nav {
-  margin: 0;
-  padding: 2px 2px 0;
+  position: relative;
 }
 
 hr {
@@ -202,7 +393,6 @@ hr {
 
 textarea {
   margin: 2px 5px;
-  min-height: 500px;
   width: 100%;
   min-height: 80vh;
 }
@@ -215,29 +405,19 @@ span.area {
   font-weight: bold;
 }
 
+.tac {
+  text-align: center;
+}
+
 span#scopeRadios.invalid {
   opacity: 0.35;
-}
-
-#demo {
-  padding: 10px;
-  max-width: 820px;
-  margin: 0 auto;
-}
-
-label, input {
-  cursor: pointer;
 }
 
 div label {
   display: inline-block;
 }
 
-label + label {
-  margin-left: 15px;
-}
-
-textarea, input {
+textarea {
   background: #111;
   color: #fff;
   -moz-tab-size: 2;
@@ -249,21 +429,47 @@ textarea, input {
   color: lime;
 }
 
-button {
-  display: inline-block;
+button, label {
   cursor: pointer;
-  height: 26px;
-  margin: 4px 16px;
-  width: 6em;
 }
 
-#btns {
-  text-align: center;
+p.area button {
+  margin: 0 8px;
+}
+
+#section_edit button {
+  background: whitesmoke;
+  border: 3px solid #777;
+  border-radius: 18px/50%;
+  height: 36px;
+  min-width: 110px;
+  opacity: 0.85;
+}
+#section_edit button:hover, #section_edit button:active {
+  opacity: initial;
+  border-color: #444;
+}
+#section_edit button::before {
+  font-weight: normal;
+  margin-right: 5px;
+  font-size: 0.9em;
+}
+#section_edit button#runBtn::before {
+  content: "\f1b8";
+}
+#section_edit button#copyBtn {
+  cursor: copy;
+}
+#section_edit button#copyBtn::before {
+  content: "\f0c5";
+}
+#section_edit button#copyBtn.copied {
+  background: rgba(180, 251, 180, 0.15);
+}
+#section_edit button#copyBtn.copied::before {
+  content: "\f00c";
+  color: rgb(9, 235, 9);
   font-weight: bold;
-}
-
-button.copied {
-  background-color: palegreen;
 }
 
 #output.copied {

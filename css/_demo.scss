@@ -1,24 +1,142 @@
-#demo {
+#section_demo_inner {
+  width: 100%;
+  max-width: 1500px;
+  display: flex;
+  flex-wrap: wrap-reverse;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+.marker-under {
+  background: linear-gradient(transparent 60%, #ffff66 60%);
+}
+
+div#demo_info {
+  flex: 0 1 380px;
+  padding-left: 8px;
+  #demo_info_inner {
+    width: 380px;
+    height: 100%;
+    position: fixed;
+    top: 50px;
+  }
+  li {
+    margin: 10px 0;
+    &:first-of-type {
+      margin-top: 0;
+    }
+  }
+  span.shortcut {
+    border: 2px solid #555;
+    border-radius: 5px;
+    background: #ddd;
+    padding: 1px 2px;
+    margin: 3px 2px;
+    margin-left: 10px;
+  }
+}
+
+#demo_toc {
+  border: 1px dashed #777;
+  padding: 5px;
+  ol {
+    font-size: 13.6px;
+    margin: 0;
+    padding: 0;
+  }
+  li {
+    list-style: none;
+    white-space: pre-wrap;
+    line-height: 1.08em;
+    cursor: pointer;
+    &.toc_h1 {
+      color: crimson;
+      &::after {
+        content: "：誤って本文に見出しh1が挿入されています！";
+      }
+    }
+    &.toc_h2, &.toc_h1 {
+      font-weight: bold;
+    }
+    &.toc_h3 {
+      padding-left: 10px;
+    }
+    &.toc_h4 {
+      padding-left: 20px;
+    }
+    &.toc_h5 {
+      padding-left: 30px;
+    }
+    &.toc_h6 {
+      padding-left: 40px;
+    }
+    &.toc_h4, &.toc_h5, &.toc_h6 {
+      font-size: 13.3px;
+    }
+    &:hover {
+      opacity: .65;
+    }
+  }
+}
+
+/* 820 + 380 = 1200 */
+@media (max-width: 1200px) {
+  div#demo_info {
+    #demo_info_inner {
+      position: relative;
+      top: initial;
+    }
+  }
+}
+
+// デモのテーブル設定
+div#demo {
+  counter-reset: tableNumber 0;
+  table {
+    margin: 40px auto 15px;
+    min-width: 90%;
+    cursor: nwse-resize;
+    position: relative;
+    counter-increment: tableNumber 1;
+    &::before {
+      display: block;
+      position: absolute;
+      top: -1.6em;
+      content: counter(tableNumber) " 個目の表";
+    }
+  }
   table, th, td {
     border-collapse: collapse;
     border: 1px solid #222;
   }
   thead {
-    background: rgba(255, 165, 0, 0.7);
+    background: rgba(255, 165, 0, .6);
     font-weight: normal;
+    border-bottom: 3px solid;
   }
   th {
     font-weight: bold !important;
     text-align: center;
   }
   tbody th {
-    background: rgba(255, 165, 0, 0.2);
+    background: rgba(255, 165, 0, .2);
+  }
+}
+
+#section_demo {
+  strong, span.pseudo_strong {
+    border: 1px dashed red;
+  }
+  p, span.pseudo_p {
+    border: 1px dotted royalblue;
   }
 }
 
 #demo {
-  .marker-under {
-    background: linear-gradient(transparent 60%, #ffff66 60%);
+  padding: 10px;
+  max-width: 820px;
+  strong {
+    cursor: pointer;
   }
   .has-text-align-right {
     text-align: right;
@@ -27,7 +145,10 @@
     text-align: center;
   }
   a {
-    color: #3399CC;
+    color: #287AA3;
+  }
+  a[target="_blank"][rel="noreferrer noopener"]::after {
+    content: "\f08e";
   }
   h2 {
     font-size: 28px;
@@ -61,11 +182,35 @@
     border-left: 7px solid #f9c801;
   }
   p {
-    margin: 10px 0;
-    border: 1px dotted royalblue;
+    cursor: ew-resize;
+    margin: 12px 0;
+    padding: 2px 1px;
+    &.has-text-align-right {
+      border: 1px dashed royalblue;
+      position: relative;
+      &::before {
+        position: absolute;
+        left: -10px;
+        top: -10px;
+        display: inline-block;
+        background-color: rgba(150, 255, 255, 0.45);
+        font-size: 12px;
+        content: "▶右寄せ";
+      }
+    }
   }
 }
 
+#demo .wp-block-image {
+  &::before {
+    display: block;
+    content: attr(title);
+  }
+  &.warning::before {
+    color: crimson;
+    font-weight: bold;
+  }
+}
 // セキュリティ上の問題などで画像読み込み失敗時の代替表示
 div.demoImgOnError {
   height: 450px;
