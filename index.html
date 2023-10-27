@@ -3,42 +3,86 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="robots" content="noindex">
+		<link rel="preload" as="style" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 		<title>入稿ツール</title>
 		<link rel="stylesheet" href="css/style.css" />
 		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 	</head>
 	<body>
 		<main>
+
 			<nav id="nav_changetabs" class="flex">
 				<div id="tabButtons">
 					<button class="btn_show">原稿編集</button>
-					<button>デモ表示</button>
-					<button>表の設定</button>
+					<button id="demotabBtn">プレビュー</button>
+					<button>記事情報</button>
+					<button>使い方</button>
 				</div>
 			</nav>
-			<section>
-				<div class="flex textareas" data-tabname="原稿編集">
-					<div 入力欄>
-						<span class="bold area">入力</span><br>
-						<textarea id="source" placeholder="この欄に、WordPressのコードエディターより原稿を貼り付けてください。"></textarea>
+			<nav id="nav_settings">
+				<i class="fa fa-cog" id="nav_settings_icon" role="button"></i>
+				<div id="nav_settings_overlay">
+					<p class="bold">「実行」ボタンを押したときの編集内容を細かく設定します。</p>
+					<p>strongタグの黄色マーカー設定</p>
+					<label><input type="checkbox" name="" id="">表中でもマーカーを引く</label>
+					<label><input type="checkbox" name="" id="">リスト中でもマーカーを引く</label>
+					<label><input type="number" max="30" min="1" step="1" name="" id=""> 文字以上の箇所にマーカーを引く<br>(1~30の間の整数を設定)</label>
+					<p>表の編集設定</p>
+					<label><input type="checkbox" name="" id="">表の見出し行を上から1行に自動設定</label>
+					<label><input type="checkbox" name="" id="">表の見出し列を左から1列に自動設定</label>
+					<p>段落の編集設定</p>
+					<label><input type="checkbox" name="" id="">表の直後の段落で開始文字列を判定し自動右寄せ</label>
+					<button id="save_settings">現在の設定をブラウザに保存</button>
+				</div>
+			</nav>
+
+			<section data-tabname="原稿編集" id="section_edit">
+				<h1 hidden>原稿編集エリア</h1>
+				<div class="flex textareas">
+					<div><!-- 入力欄 -->
+						<p class="bold area tac">入力欄<button id="runBtn" title="実行ボタンを押すと、入力欄の原稿を編集して出力欄に出力します。">実行</button></p>
+						<textarea id="source" placeholder="この欄にWordPressのコードエディターより原稿を貼り付けて、実行ボタンを押してください。"></textarea>
 					</div>
-					<div 出力欄>
-						<span class="bold area">出力</span><label><input type="checkbox" id="releaseReadonlyCheck">テキストエリアを直接編集可能にする（誤編集防止を解除）</label><br>
+					<div><!-- 出力欄 -->
+						<p class="bold area tac">出力欄<button id="copyBtn" title="コピーボタンを押すと、出力欄の原稿全体を端末のクリップボードにコピーします。">コピー</button></p><!-- <label><input type="checkbox" id="releaseReadonlyCheck">テキストエリアを直接編集可能にする（誤編集防止を解除）</label><br> -->
 						<textarea id="output" readonly></textarea>
 					</div>
 				</div>
-				<div id="btns">
-					<button id="runBtn" title="自動編集を実行">実行</button>
-					<button id="copyBtn" title="出力エリアのコードをクリップボードにコピー">コピー</button>
+			</section>
+
+			<section hidden data-tabname="プレビュー" id="section_demo">
+				<h1 hidden>プレビューエリア</h1>
+				<div id="section_demo_inner">
+					<div id="demo">編集を実行すると、編集後の記事がここにデモ表示されます。</div>
+					<div id="demo_info">
+						<div id="demo_info_inner">
+							<div id="demo_cheatsheet">
+								<ul>
+									<li><span class="bold">strong</span> (太字･<span class="pseudo_strong">赤破線</span>)<br><span class="shortcut">Ctrl+クリック</span>で<span class="marker-under">黄色マーカー</span></li>
+									<li><span class="bold">段落</span> (<span class="pseudo_p">青破線</span>)<br><span class="shortcut">Alt+クリック</span>で▶右寄せ</li>
+									<li><span class="bold">表</span><span id="demo_counttables"></span><br><span class="shortcut">Alt+クリック</span>で見出し行･列数再設定<br>
+									<small>thead内のth: 濃い橙色, tbody内のth: 薄い橙色</small></li>
+								</ul>
+							</div>
+							<div id="demo_toc"></div>
+						</div>
+					</div>
 				</div>
 			</section>
-			<section hidden data-tabname="デモ表示">
-				<div id="demo">編集を実行すると、編集後の記事がここにデモ表示されます。</div>
+
+			<section hidden data-tabname="記事情報" id="section_data">
+				<h1 hidden>記事情報表示エリア</h1>
+				<p>編集を実行すると、編集後の記事の情報がここに表示されます。（未実装）</p>
 			</section>
-			<section hidden data-tabname="表の設定">
-				<p>原稿中の表一覧に対して、個別にthead行数や見出し列数(左からn列目まで)などを設定可能にする（個別設定なしの時の既定値はそれぞれ1）。<br>これから実装予定</p>
+
+			<section hidden data-tabname="使い方" id="section_how2">
+				<h1 hidden>このツールを使ったWordPress入稿の方法を解説</h1>
+				<div id="how2Inner"></div>
 			</section>
+
 		</main>
 		<script src="js/main.js"></script>
+		<script src="js/description.js"></script>
 	</body>
 </html>
