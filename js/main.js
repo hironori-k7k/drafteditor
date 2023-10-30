@@ -420,7 +420,7 @@ function demoImgOnError(img) {
 			console.warn("画像への代替タグ設定が正常に完了しませんでした。\n", error);
 		}
 		try {
-			autoEdit && openExternalLinksWithNewTab();
+			openExternalLinksWithNewTab();
 		} catch (error) {
 			console.warn("外部リンクの「新しいタブで開く」設定が正常に完了しませんでした。\n", error);
 		}
