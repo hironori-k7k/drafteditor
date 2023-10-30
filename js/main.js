@@ -619,7 +619,7 @@ function demoImgOnError(img) {
 		if (e.altKey) {
 			autoEdit = false;
 			main();
-			window.alert("再編集モードで実行しました。今のところ、入力欄と実行欄は同じ内容です。");
+			window.alert("再編集モードで実行しました。入力欄の主な設定を保持しつつ出力しています。");
 			console.log("2つの欄の値が同じ", elem.source.value === elem.output.value);
 		} else {
 			autoEdit = true;
