@@ -20,32 +20,16 @@
 					<button>使い方</button>
 				</div>
 			</nav>
-			<nav id="nav_settings">
-				<i class="fa fa-cog" id="nav_settings_icon" role="button"></i>
-				<div id="nav_settings_overlay">
-					<p class="bold">「実行」ボタンを押したときの編集内容を細かく設定します。！この設定機能は未作成！</p>
-					<p>strongタグの黄色マーカー設定</p>
-					<label><input type="checkbox" name="" id="">表中でもマーカーを引く</label>
-					<label><input type="checkbox" name="" id="">リスト中でもマーカーを引く</label>
-					<label><input type="number" max="30" min="1" step="1" name="" id=""> 文字以上の箇所にマーカーを引く<br>(1~30の間の整数を設定)</label>
-					<p>表の編集設定</p>
-					<label><input type="checkbox" name="" id="">表の見出し行を上から1行に自動設定</label>
-					<label><input type="checkbox" name="" id="">表の見出し列を左から1列に自動設定</label>
-					<p>段落の編集設定</p>
-					<label><input type="checkbox" name="" id="">表の直後の段落で開始文字列を判定し自動右寄せ</label>
-					<button id="save_settings">現在の設定をブラウザに保存</button>
-				</div>
-			</nav>
 
 			<section data-tabname="原稿編集" id="section_edit">
 				<h1 hidden>原稿編集エリア</h1>
 				<div class="flex textareas">
 					<div><!-- 入力欄 -->
-						<p class="bold area tac">入力欄<button id="runBtn" title="実行ボタンを押すと、入力欄の原稿を編集して出力欄に出力します。">実行</button></p>
-						<textarea id="source" placeholder="この欄にWordPressのコードエディターより原稿を貼り付けて、実行ボタンを押してください。"></textarea>
+						<p class="bold area tac">入力欄<button id="runBtn" title="入力欄の原稿を編集して出力します。再編集モードはaltキーを押しながらクリック。">実行</button></p>
+						<textarea id="source" placeholder="この欄にWordPressのコードエディターよりHTML版の原稿を貼り付けて、実行ボタンをクリックしてください。Altキーを押しながら実行ボタンをクリックすると、再編集モードで動作します（自動編集は行わずにプレビュー画面で再編集のみ行うモード）。"></textarea>
 					</div>
 					<div><!-- 出力欄 -->
-						<p class="bold area tac">出力欄<button id="copyBtn" title="コピーボタンを押すと、出力欄の原稿全体を端末のクリップボードにコピーします。">コピー</button></p><!-- <label><input type="checkbox" id="releaseReadonlyCheck">テキストエリアを直接編集可能にする（誤編集防止を解除）</label><br> -->
+						<p class="bold area tac">出力欄<button id="copyBtn" title="コピーボタンを押すと、出力欄の原稿全体を端末のクリップボードにコピーします。">コピー</button></p>
 						<textarea id="output" readonly></textarea>
 					</div>
 				</div>
@@ -72,8 +56,8 @@
 			</section>
 
 			<section hidden data-tabname="記事情報" id="section_data">
-				<h1 hidden>記事情報表示エリア</h1>
-				<p>編集を実行すると、編集後の記事の情報がここに表示されます。（未実装）</p>
+				<h1 hidden>情報表示エリア</h1>
+				<p>実行後に、編集時のエラー情報や、記事の情報がここに表示されます。（未実装）</p>
 			</section>
 
 			<section hidden data-tabname="使い方" id="section_how2">
@@ -84,5 +68,6 @@
 		</main>
 		<script src="js/main.js?ver=0.1.0"></script>
 		<script src="js/description.js?ver=0.1.0"></script>
+		<script src="js/test.js"></script>
 	</body>
 </html>
