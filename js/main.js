@@ -507,7 +507,7 @@ function demoImgOnError(img) {
 					row: param.theadRows,
 					col: param.thColumns,
 				};
-				if (window.confirm(`上から何列目までを見出し行にするかを変更しますか？\n現在の設定：上から${param.theadRows}行`)) {
+				if (window.confirm(`上から何行目までを見出し行にするかを変更しますか？\n現在の設定：上から${param.theadRows}行`)) {
 					for (let i=0;i<3;i++) {
 						let row = prompt(`上から◯行を見出し行にする\n0 から ${param.rowLength} までの間で、整数を半角で入力\n ※やはり変更しない場合はキャンセルをクリック`);
 						if (row == null) break; // キャンセル(null)されたら現在値のままbreakする
