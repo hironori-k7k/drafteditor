@@ -18,18 +18,9 @@ function demoImgOnError(img) {
 }
 
 {
-	function initNavOverlay() {
-		const icon = document.getElementById("nav_settings_icon");
-		icon.addEventListener("click", () => icon.classList.toggle("open_settings"));
-	}
-	try {
-		initNavOverlay();
-	} catch (error) {
-		console.log(error);
-	}
-
 	let article;
 	let draftData;
+	let autoEdit = true;
 	// 要素取得
 	const elem = {
 		source: document.getElementById("source"), // 入力エリア
@@ -86,11 +77,6 @@ function demoImgOnError(img) {
 				animateWithClass(elem.output, "copied", 1500);
 			});
 		},
-		// 出力欄のreadonly解除
-		// releaseReadonly: () => {
-		// 	document.getElementById("releaseReadonlyCheck")
-		// 	.addEventListener('input', () => elem.output.toggleAttribute('readonly'));
-		// }
 	};
 	// 初期化する
 	operation.init();
@@ -121,10 +107,12 @@ function demoImgOnError(img) {
 	// 見出し下の子要素（strongやspanなど）をすべて除去してテキストのみにする
 	function removeTagsInHeading() {
 		const headings = article.getElementsByClassName("wp-block-heading");
-		for (let i=0;i<headings.length;i++) {
-			// hタグが何かしらの子要素を持っていたら実行
-			if (headings[i].childElementCount > 0) {
-				headings[i].innerHTML = headings[i].textContent;
+		if (autoEdit) {
+			for (let i=0;i<headings.length;i++) {
+				// hタグが何かしらの子要素を持っていたら実行
+				if (headings[i].childElementCount > 0) {
+					headings[i].innerHTML = headings[i].textContent;
+				}
 			}
 		}
 		draftData.headings = Array.from(headings);
@@ -132,15 +120,17 @@ function demoImgOnError(img) {
 	// 画像の代替タグを設定する
 	function setAlt2Images() {
 		const figures = article.getElementsByClassName("wp-block-image");
-		for (let i=0;i<figures.length;i++) {
-			const img = figures[i].querySelector("img");
-			if (img === null) continue;
-			const prev = figures[i].previousElementSibling; // 通常は見出しタグを取得することになる
-			if (prev === null || prev.tagName.toUpperCase().match(/^H\d$/) === null) {
-				console.log("1枚の画像の代替テキスト設定に失敗。画像ブロックの前に見出しブロックが見つかりませんでした。");
-				continue;
+		if (autoEdit) {
+			for (let i=0;i<figures.length;i++) {
+				const img = figures[i].querySelector("img");
+				if (img === null) continue;
+				const prev = figures[i].previousElementSibling; // 通常は見出しタグを取得することになる
+				if (prev === null || prev.tagName.toUpperCase().match(/^H\d$/) === null) {
+					console.log("1枚の画像の代替テキスト設定に失敗。画像ブロックの前に見出しブロックが見つかりませんでした。");
+					continue;
+				}
+				img.setAttribute("alt", prev.textContent);
 			}
-			img.setAttribute("alt", prev.textContent);
 		}
 		draftData.images = Array.from(figures);
 	}
@@ -199,11 +189,13 @@ function demoImgOnError(img) {
 	function addMarker2Strongs() {
 		const strongs = article.getElementsByTagName("strong");
 		draftData.strongs.count = strongs.length;
-		for (let i=0;i<strongs.length;i++) {
-			const blockType = getBlockData(strongs[i]).type;
-			if (blockType !== "table" && blockType !== "list") {
-				strongs[i].classList.add("marker-under");
-				draftData.strongs.edited++;
+		if (autoEdit) {
+			for (let i=0;i<strongs.length;i++) {
+				const blockType = getBlockData(strongs[i]).type;
+				if (blockType !== "table" && blockType !== "list") {
+					strongs[i].classList.add("marker-under");
+					draftData.strongs.edited++;
+				}
 			}
 		}
 		draftData.strongs.elements = Array.from(strongs);
@@ -273,7 +265,7 @@ function demoImgOnError(img) {
 		return tableCoordinates;
 	}
 	// 1つのtableの編集版を取得
-	function getEditedTable(originalTable, reEdit = false, inpRow = 1, inpCol = 1) {
+	function getEditedTable(originalTable, reEdit = false, inpRow = undefined, inpCol = undefined) {
 		// もとの表HTMLについてのデータ
 		const orig = {
 			table: originalTable,
@@ -281,15 +273,43 @@ function demoImgOnError(img) {
 		};
 		// 表の構造や設定に関するパラメータ
 		const param = {
-			theadRows: inpRow,
-			thColumns: inpCol,
+			theadRows: inpRow ?? (() => { // 指定値があれば適用
+				const origRows = orig.table.querySelectorAll("thead tr").length;
+				if (autoEdit === false || origRows > 0) return origRows; // 再編集モード、もしくはthead設定済みの表ならtheadからの読み取り値
+				// 通常モードで、かつthead未設定の場合 最初の行から推測する
+				const firstTr = orig.table.querySelector("tr");
+				if (!firstTr) return 1;
+				let rows = 1; // 既定値の1で初期化
+				// rowspanを見てtheadが2行以上の場合を推測する
+				const cells = firstTr.querySelectorAll("th, td");
+				for (const cell of cells) {
+					const rowspanAttr = cell.getAttribute("rowspan");
+					if (rowspanAttr === null) continue;
+					const rowspan = Number(rowspanAttr);
+					if (!Number.isNaN(rowspan) && Number.isInteger(rowspan)) rows = Math.max(rows, rowspan);
+				}
+				return rows;
+			})(),
+			thColumns: inpCol ?? (() => { // 指定値があれば適用
+				if (autoEdit === true) return 1; // 通常編集なら既定値1
+				// 再編集モードではtbody tr:first-of-type thの列数を読み取り
+				const thsIn1stBodyTr = orig.table.querySelectorAll("tbody tr:first-of-type th");
+				let cols = thsIn1stBodyTr.length;
+				for (const th of thsIn1stBodyTr) {
+					const colspanAttr = th.getAttribute("colspan");
+					if (colspanAttr === null) continue;
+					const colspan = Number(colspanAttr);
+					if (!Number.isNaN(colspan) && Number.isInteger(colspan) && colspan > 1) cols += (colspan - 1);
+				}
+				return cols; // 再編集モードでの読み取り値を返す
+			})(),
 			rowLength: orig.table.rows.length,
 			columnLength: calcColumnLength(orig.table),
 		};
 		const [table, thead, tbody] = ["table", "thead", "tbody"].map(tagName => document.createElement(tagName));
 	
 		const tableCoordinates = getTableCoordinates(orig, param);
-		// dispTableCoordinates(tableCoordinates, param); // 開発用
+		dispTableCoordinates(tableCoordinates, param); // 開発用
 		
 		// 原本の各trを参照しつつ、各行のhtmlを再生成する
 		let cellIndex = 0;
@@ -355,7 +375,7 @@ function demoImgOnError(img) {
 					edited: false,
 					element: undefined,
 					param: undefined,
-					tableCoordinates, undefined
+					tableCoordinates: undefined
 				});
 			}
 		}
@@ -367,6 +387,14 @@ function demoImgOnError(img) {
 	}
 	// 表が属するブロックの次のelementがpタグで、かつ特定の文字列から始まれば、そのpタグを右寄せにする
 	function captionAlignRight() {
+		// 無条件に付与するケース
+		const ps = article.getElementsByTagName("p");
+		for (const p of ps) {
+			if (p.textContent.match(/^※?(参考|出典|引用)：/) || p.textContent.match(/^※(参考|出典|引用)/)) {
+				p.classList.add("has-text-align-right");
+			}
+		}
+		// 表の前のみ付与するケース（無条件より厳しいルール」）
 		const tables = article.getElementsByTagName("table");
 		for (let i=0;i<tables.length;i++) {
 			const blockDataOfTable = getBlockData(tables[i]);
@@ -374,7 +402,7 @@ function demoImgOnError(img) {
 			const next = blockDataOfTable.outer.nextElementSibling;
 			if (next === null || next.tagName.toUpperCase() !== "P") continue;
 			// "※", "出典", "引用", "参考" から始まるpタグに付与
-			if (next.textContent.match(/(※|出典|引用|参考)/) != null) {
+			if (next.textContent.match(/^(※|出典|引用|参考)/) != null) {
 				next.classList.add("has-text-align-right");
 			}
 		}
@@ -384,7 +412,7 @@ function demoImgOnError(img) {
 		try {
 			removeTagsInHeading();
 		} catch (error) {
-			console.warn("見出しタグの設定が正常に完了しませんでした。\n", error);
+			console.warn("見出しタグのHTML編集が正常に完了しませんでした。\n", error);
 		}
 		try {
 			setAlt2Images();
@@ -392,7 +420,7 @@ function demoImgOnError(img) {
 			console.warn("画像への代替タグ設定が正常に完了しませんでした。\n", error);
 		}
 		try {
-			openExternalLinksWithNewTab();
+			autoEdit && openExternalLinksWithNewTab();
 		} catch (error) {
 			console.warn("外部リンクの「新しいタブで開く」設定が正常に完了しませんでした。\n", error);
 		}
@@ -403,7 +431,7 @@ function demoImgOnError(img) {
 		}
 		replaceWithEditedTables(); // 呼び出す関数側でtry
 		try {
-			captionAlignRight();
+			autoEdit && captionAlignRight();
 		} catch (error) {
 			console.warn("表の後ろのcaption右寄せ機能が正常に動作しませんでした。\n", error);
 		}
@@ -513,7 +541,6 @@ function demoImgOnError(img) {
 						}
 					}
 				}
-				console.log(inputs);
 				if (inputs.row === param.theadRows && inputs.col === param.thColumns) {
 					window.alert("行数も列数も、表に元々適用されていた値と同じです。表を編集せずに終了します。");
 					return;
@@ -582,28 +609,21 @@ function demoImgOnError(img) {
 	
 		// 記事情報を完成させて出力する
 		draftData.paragraphs.elements = article.getElementsByTagName("p");
-		// for (const prop in draftData) console.log(prop.padEnd(10, ' '), draftData[prop]);
 
 		// デモ表示を行う
 		elem.demo.innerHTML = getInnerHTML4Demo(article.innerHTML);
 		// プレビュー画面の再編集対象の要素にイベントリスナー設置
 		setDemoEditor();
 	}
-	elem.run.addEventListener("click", main);
-	
-	// const clickEvent = new Event("click");
-	// elem.run.dispatchEvent(clickEvent);
-	// document.querySelectorAll("nav button")[1].dispatchEvent(clickEvent); // デモ表示に切り替える
-
-	// const how2 = document.getElementById("section_how2");
-	// const xhr = new XMLHttpRequest();
-	// xhr.open("GET", "how2Use.html", true);
-	// xhr.onreadystatechange = function() {
-	// 	if (xhr.readyState === 4 && xhr.status === 200) {
-	// 		how2Use.innerHTML = xhr.responseText;
-	// 	} else {
-	// 		console.warn("使い方の読み込み失敗", xhr.readyState, xhr.status);
-	// 	}
-	// };
-	// xhr.send();
+	elem.run.addEventListener("click", e => {
+		if (e.altKey) {
+			autoEdit = false;
+			main();
+			window.alert("再編集モードで実行しました。今のところ、入力欄と実行欄は同じ内容です。");
+			console.log("2つの欄の値が同じ", elem.source.value === elem.output.value);
+		} else {
+			autoEdit = true;
+			main();
+		}
+	});
 }
