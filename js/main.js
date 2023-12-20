@@ -17,7 +17,24 @@ function demoImgOnError(img) {
 	}
 }
 
+// URL中の特定のパラメータ取得して文字列を返す
+function getParam(name) {
+	const searchParams = new URLSearchParams(window.location.search);
+	const nameParam = searchParams.get(name);
+	switch (nameParam) {
+		case nameParam:
+			return nameParam;
+		case nameParam === "":
+			return "";
+		default:
+			return null;
+	}
+}
+
 {
+	const reeditParam = getParam("reedit");
+	const reeditMode = reeditParam === "true" ? true : false;
+
 	let article;
 	let draftData;
 	let autoEdit = true;
@@ -29,6 +46,10 @@ function demoImgOnError(img) {
 		run: document.getElementById("runBtn"), // 実行ボタン
 		copy: document.getElementById("copyBtn"), // コピーボタン
 	};
+
+	const modeText = reeditMode ? "再編集モード" : "通常編集モード";
+	document.title += `（${modeText}）`;
+	elem.run.textContent += `（${modeText}）`;
 	
 	// アニメーション用のclass付与関数
 	function animateWithClass(element, className, mSec) {
@@ -488,7 +509,7 @@ function demoImgOnError(img) {
 				elem.output.value = article.innerHTML;
 			});
 		}
-		// altキー+表をクリック 表の再編集機能
+		// altキー + 表をクリック 表の再編集機能
 		const tables = elem.demo.getElementsByTagName("table");
 		for (let i=0;i<tables.length;i++) {
 			const table = tables[i];
@@ -615,11 +636,11 @@ function demoImgOnError(img) {
 		// プレビュー画面の再編集対象の要素にイベントリスナー設置
 		setDemoEditor();
 	}
-	elem.run.addEventListener("click", e => {
-		if (e.altKey) {
+
+	elem.run.addEventListener("click", () => {
+		if (reeditMode) {
 			autoEdit = false;
 			main();
-			window.alert("再編集モードで実行しました。入力欄の主な設定を保持しつつ出力しています。");
 			console.log("2つの欄の値が同じ", elem.source.value === elem.output.value);
 		} else {
 			autoEdit = true;
