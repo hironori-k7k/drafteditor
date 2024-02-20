@@ -357,6 +357,15 @@ function getParam(name) {
 						strong.outerHTML = strong.innerHTML;
 					}
 				}
+				// tdを中央寄せにする、tdでなければ中央寄せ設定を削除
+				if (cell.tagName.toUpperCase() == "TD") {
+					cell.classList.add("has-text-align-center");
+					cell.dataset.align = "center";
+				} else {
+					cell.classList.remove("has-text-align-center");
+					if (cell.classList.length === 0) cell.removeAttribute("class");
+					delete cell.dataset.align;
+				}
 				// セルを行に挿入
 				tr.appendChild(cell);
 				cellIndex++;
@@ -376,7 +385,7 @@ function getParam(name) {
 				tableCoordinates, tableCoordinates
 			});
 		}
-	
+
 		return table;
 	}
 	// 表一覧を取得
